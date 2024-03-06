@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="dimen_text_splash">60sp</dimen>
+    <dimen name="dimen_container_menu">16dp</dimen>
+    <dimen name="dimen_ic">15dp</dimen>
+</resources>
