@@ -69,8 +69,8 @@ dependencies {
     implementation ("androidx.navigation:navigation-ui-ktx:$nav_version")
 
     //Room
-    implementation ("androidx.room:room-runtime:2.5.0")
-    kapt("androidx.room:room-compiler:2.5.0")
+    implementation ("androidx.room:room-runtime:2.6.1")
+    kapt("androidx.room:room-compiler:2.6.1")
     implementation ("com.getbase:floatingactionbutton:1.10.1")
 
 

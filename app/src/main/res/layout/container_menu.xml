@@ -28,9 +28,9 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:background="@drawable/font_menu_degraded"
-                android:paddingVertical="10dp"
+                android:gravity="center"
                 android:orientation="horizontal"
-                android:gravity="center">
+                android:paddingVertical="10dp">
 
                 <ImageView
                     android:layout_width="wrap_content"
@@ -49,13 +49,14 @@
                     android:src="@drawable/ic_volume_on"
                     android:visibility="visible"
                     app:layout_constraintTop_toTopOf="parent" />
+
                 <ImageView
                     android:id="@+id/icMuteOn"
-                    android:visibility="gone"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:layout_marginHorizontal="@dimen/dimen_ic"
                     android:src="@drawable/ic_volume_off"
+                    android:visibility="gone"
                     app:layout_constraintTop_toTopOf="parent" />
 
                 <ImageView
