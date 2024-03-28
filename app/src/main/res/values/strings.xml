@@ -7,4 +7,10 @@
     <string name="btnCloseDialog">Cerrar</string>
     <string name="retos">Retos</string>
     <string name="add_challenge">Add Challenge</string>
+    <string name="agregar_reto">Agregar Reto</string>
+    <string name="escriba_el_reto">Escriba el reto</string>
+    <string name="cancelar">Cancelar</string>
+    <string name="guardar">Guardar</string>
+    <string name="title_dialog_eliminar">¿Desear eliminar el siguente reto?</string>
+    <string name="editar_reto">Editar Reto</string>
 </resources>
