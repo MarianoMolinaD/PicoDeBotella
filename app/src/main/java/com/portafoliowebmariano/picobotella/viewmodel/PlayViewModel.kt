@@ -145,4 +145,13 @@ class PlayViewModel(application: Application) : AndroidViewModel(application) {
             }
         }
     }
+    fun updateChallenge (challenge: Challenge){
+        viewModelScope.launch {
+            try {
+                challengeRepository.updateChallenge(challenge)
+            }catch (e : Exception){
+
+            }
+        }
+    }
 }

@@ -27,5 +27,9 @@ class ChallengeRepository(val context: Context) {
         }
     }
 
-
+    suspend fun updateChallenge(challenge: Challenge){
+        withContext(Dispatchers.IO){
+            daoChallenge.updateChallenge(challenge)
+        }
+    }
 }
