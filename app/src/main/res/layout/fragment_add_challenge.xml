@@ -8,7 +8,7 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/gradient_Final">
+        android:background="@color/gradient_end">
 
         <include
             android:id="@+id/ic_Content_Bar"
@@ -27,6 +27,7 @@
             android:paddingHorizontal="16dp"
             android:paddingBottom="100dp"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/ic_Content_Bar"
             tools:ignore="MissingConstraints">
@@ -59,6 +60,7 @@
             />
 
         <ProgressBar
+            android:id="@+id/pb_Challenge"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:visibility="gone"

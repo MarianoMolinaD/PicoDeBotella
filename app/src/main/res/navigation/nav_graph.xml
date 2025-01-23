@@ -24,6 +24,9 @@
             app:exitAnim="@anim/nav_default_enter_anim"
             app:popEnterAnim="@anim/nav_default_enter_anim"
             app:popExitAnim="@anim/nav_default_enter_anim" />
+        <action
+            android:id="@+id/action_homeFragment_to_webViewFragment"
+            app:destination="@id/webViewFragment" />
     </fragment>
     <fragment
         android:id="@+id/rulesPlayFragment"
@@ -36,4 +39,9 @@
         android:label="AddChallengeFragment"
         tools:layout="@layout/fragment_add_challenge"
         />
+    <fragment
+        android:id="@+id/webViewFragment"
+        android:name="com.portafoliowebmariano.picobotella.view.fragment.WebViewFragment"
+        android:label="WebViewFragment"
+        tools:layout="@layout/fragment_web_view"/>
 </navigation>

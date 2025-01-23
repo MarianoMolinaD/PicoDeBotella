@@ -12,6 +12,8 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
+
+
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/cl_Container"
             android:layout_width="match_parent"
@@ -23,6 +25,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent">
+
 
             <TextView
                 android:id="@+id/tv_Chagenlle"
@@ -49,12 +52,23 @@
             android:layout_height="90dp"
             android:background="@drawable/bg_circle_challenge"
             android:padding="2dp"
-            android:src="@drawable/logoutiltek"
+            android:src="@drawable/imgreto"
             tools:ignore="ContentDescription"
             app:layout_constraintBottom_toTopOf="@+id/cl_Container"
             app:layout_constraintEnd_toEndOf="@+id/cl_Container"
             app:layout_constraintStart_toStartOf="@+id/cl_Container"
             app:layout_constraintTop_toTopOf="@+id/cl_Container" />
+        <ProgressBar
+            android:id="@+id/pb_Dialog"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintBottom_toTopOf="@+id/cl_Container"
+            app:layout_constraintEnd_toEndOf="@+id/cl_Container"
+            app:layout_constraintStart_toStartOf="@+id/cl_Container"
+            app:layout_constraintTop_toTopOf="@+id/cl_Container"
+            android:visibility="gone"
+
+            />
 
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/btn_Close"

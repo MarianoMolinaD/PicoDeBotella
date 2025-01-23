@@ -33,11 +33,13 @@
                 android:paddingVertical="10dp">
 
                 <ImageView
+                    android:id="@+id/iv_Star"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:layout_marginHorizontal="@dimen/dimen_ic"
                     android:src="@drawable/ic_star"
                     app:layout_constraintTop_toTopOf="parent"
+                    app:tint = "@color/backgroundIc"
 
                     />
 
@@ -48,7 +50,9 @@
                     android:layout_marginHorizontal="@dimen/dimen_ic"
                     android:src="@drawable/ic_volume_on"
                     android:visibility="visible"
-                    app:layout_constraintTop_toTopOf="parent" />
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:tint = "@color/backgroundIc"
+                    />
 
                 <ImageView
                     android:id="@+id/icMuteOn"
@@ -57,7 +61,9 @@
                     android:layout_marginHorizontal="@dimen/dimen_ic"
                     android:src="@drawable/ic_volume_off"
                     android:visibility="gone"
-                    app:layout_constraintTop_toTopOf="parent" />
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:tint = "@color/backgroundIc"
+                    />
 
                 <ImageView
                     android:id="@+id/icRules"
@@ -65,7 +71,9 @@
                     android:layout_height="match_parent"
                     android:layout_marginHorizontal="@dimen/dimen_ic"
                     android:src="@drawable/ic_play_rules"
-                    app:layout_constraintTop_toTopOf="parent" />
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:tint = "@color/backgroundIc"
+                    />
 
                 <ImageView
                     android:id="@+id/icAddChallenge"
@@ -73,14 +81,19 @@
                     android:layout_height="match_parent"
                     android:layout_marginHorizontal="@dimen/dimen_ic"
                     android:src="@drawable/ic_add_penance"
-                    app:layout_constraintTop_toTopOf="parent" />
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:tint = "@color/backgroundIc"
+                    />
 
                 <ImageView
+                    android:id="@+id/share"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:layout_marginHorizontal="@dimen/dimen_ic"
                     android:src="@drawable/ic_share"
-                    app:layout_constraintTop_toTopOf="parent" />
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:tint = "@color/backgroundIc"
+                    />
 
             </LinearLayout>
 

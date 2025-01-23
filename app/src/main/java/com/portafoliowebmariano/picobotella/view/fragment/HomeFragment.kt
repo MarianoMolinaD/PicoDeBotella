@@ -2,12 +2,15 @@ package com.portafoliowebmariano.picobotella.view.fragment
 
 import android.media.MediaParser
 import android.media.MediaPlayer
+import android.os.Build
 import android.os.Bundle
+import android.os.CountDownTimer
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.annotation.RequiresApi
 import androidx.core.view.isVisible
 import androidx.fragment.app.viewModels
 import androidx.navigation.NavController
@@ -15,10 +18,14 @@ import androidx.navigation.Navigation
 import androidx.navigation.fragment.findNavController
 import com.portafoliowebmariano.picobotella.R
 import com.portafoliowebmariano.picobotella.databinding.FragmentHomeBinding
+import com.portafoliowebmariano.picobotella.model.Challenge
+import com.portafoliowebmariano.picobotella.model.Pokemon
 import com.portafoliowebmariano.picobotella.viewmodel.PlayViewModel
 import kotlinx.coroutines.runBlocking
 
 class HomeFragment : Fragment() {
+    private lateinit var listChallenge: MutableList<Challenge>
+    private lateinit var listPokemon: MutableList<Pokemon>
     private lateinit var navController: NavController
     private lateinit var audioBackground: MediaPlayer
     private lateinit var audioSpinBottle: MediaPlayer
@@ -34,7 +41,7 @@ class HomeFragment : Fragment() {
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
+        savedInstanceState: Bundle?,
     ): View? {
         binding = FragmentHomeBinding.inflate(inflater)
         binding.lifecycleOwner = this
@@ -68,6 +75,12 @@ class HomeFragment : Fragment() {
 
         binding.btnSpin.setOnClickListener {
             playViewModel.spinBottle()
+            observerListPokemon()
+        }
+        binding.icContainerMenu.ivStar.setOnClickListener {
+            audioBackground.pause()
+            findNavController().navigate(R.id.action_homeFragment_to_webViewFragment)
+            playViewModel.statusShowDialog(false)
         }
         binding.icContainerMenu.icMuteOff.setOnClickListener {
             isMute = true
@@ -84,6 +97,10 @@ class HomeFragment : Fragment() {
         }
         binding.icContainerMenu.icAddChallenge.setOnClickListener {
             findNavController().navigate(R.id.action_homeFragment_to_addChallengeFragment)
+            playViewModel.statusShowDialog(false)
+        }
+        binding.icContainerMenu.share.setOnClickListener {
+            playViewModel.shareApp(audioBackground, requireActivity())
         }
     }
 
@@ -92,26 +109,68 @@ class HomeFragment : Fragment() {
         observerEnableButton()
         observerEnableStreamers()
         observerDialogChallenge()
+        observerListChallenge()
+    }
+
+    private fun observerListPokemon() {
+        listPokemon = mutableListOf()
+        playViewModel.listPokemon()
+        playViewModel.listPokemon.observe(viewLifecycleOwner){list ->
+            listPokemon = list
+        }
+    }
+
+    private fun observerListChallenge() {
+        listChallenge = mutableListOf()
+        playViewModel.getListChallenge()
+        playViewModel.listChallenge.observe(viewLifecycleOwner) { lista ->
+            listChallenge = lista
+        }
     }
 
     private fun observerDialogChallenge() {
-        playViewModel.statusShowDialog.observe(viewLifecycleOwner) {
-            if (it) {
-                runBlocking {
-                    audioSuspense.start()
-                    playViewModel.wait(3)
+        playViewModel.statusShowDialog.observe(viewLifecycleOwner) { status ->
+            if (status) {
+                val countDownTimer = object : CountDownTimer(4000, 1000) {
+                    override fun onTick(millisUntilFinished: Long) {
+                        audioSuspense.start()
+                        binding.tvCuentaRegresiva.text = (millisUntilFinished / 1000).toString()
+                    }
+
+                    @RequiresApi(Build.VERSION_CODES.M)
+                    override fun onFinish() {
+                        audioSuspense.pause()
+                        audioShowChallenge.start()
+                        playViewModel.dialogShowChallenge(
+                            requireContext(),
+                            audioBackground, isMute,
+                            playViewModel.getChallenge(listChallenge),
+                            playViewModel
+                        )
+                        audioSpinBottle.pause()
+                        audioButton.pause()
+                        binding.tvCuentaRegresiva.text = ""
+                    }
                 }
-                audioSuspense.pause()
-                val messageChallenge = "Debes tomar un trago"
-                playViewModel.dialogShowChallenge(
-                    requireContext(),
-                    audioBackground, isMute,
-                    messageChallenge
-                )
-                audioShowChallenge.start()
-                audioSpinBottle.pause()
-                audioButton.pause()
+                countDownTimer.start()
             }
+
+
+//            if (status) {
+//                runBlocking {
+//                    audioSuspense.start()
+//                    playViewModel.wait(3)
+//                }
+//                audioSuspense.pause()
+//                playViewModel.dialogShowChallenge(
+//                    requireContext(),
+//                    audioBackground, isMute,
+//                    playViewModel.getChallenge(listChallenge)
+//                )
+//                audioShowChallenge.start()
+//                audioSpinBottle.pause()
+//                audioButton.pause()
+//            }
         }
     }
 

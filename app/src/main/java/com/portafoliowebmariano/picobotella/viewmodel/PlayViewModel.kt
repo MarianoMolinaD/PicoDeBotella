@@ -5,18 +5,22 @@ import android.app.Application
 import android.content.Context
 import android.content.Intent
 import android.media.MediaPlayer
-import android.os.Handler
-import android.provider.MediaStore.Audio.Media
+import android.net.ConnectivityManager
+import android.net.NetworkCapabilities
+import android.os.Build
 import android.view.animation.Animation
 import android.view.animation.DecelerateInterpolator
 import android.view.animation.RotateAnimation
+import androidx.annotation.RequiresApi
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.portafoliowebmariano.picobotella.R
 import com.portafoliowebmariano.picobotella.model.Challenge
+import com.portafoliowebmariano.picobotella.model.Pokemon
 import com.portafoliowebmariano.picobotella.repository.ChallengeRepository
+import com.portafoliowebmariano.picobotella.utils.constants
 import com.portafoliowebmariano.picobotella.utils.constants.TIME
 import com.portafoliowebmariano.picobotella.view.MainActivity
 import com.portafoliowebmariano.picobotella.view.dialog.DialogShowChallenge.showDialogChallenge
@@ -24,6 +28,7 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import java.util.concurrent.Executors
 import java.util.concurrent.TimeUnit
+import kotlin.random.Random
 
 class PlayViewModel(application: Application) : AndroidViewModel(application) {
 
@@ -49,10 +54,16 @@ class PlayViewModel(application: Application) : AndroidViewModel(application) {
     val isMute: LiveData<Boolean> get() = _isMute
 
     private val _listChallenge = MutableLiveData<MutableList<Challenge>>()
-    val listChallenge : LiveData<MutableList<Challenge>> get() = _listChallenge
+    val listChallenge: LiveData<MutableList<Challenge>> get() = _listChallenge
+
+    private val _isLoading = MutableLiveData(false)
+    val isLoading: LiveData<Boolean> get() = _isLoading
+
+    private val _listPokemon = MutableLiveData<MutableList<Pokemon>>()
+    val listPokemon : LiveData<MutableList<Pokemon>> get() = _listPokemon
 
     fun splashScreen(activity: Activity) {
-       val executor = Executors.newSingleThreadScheduledExecutor()
+        val executor = Executors.newSingleThreadScheduledExecutor()
         executor.schedule({
             activity.startActivity(Intent(activity, MainActivity::class.java))
             activity.finish()
@@ -96,13 +107,15 @@ class PlayViewModel(application: Application) : AndroidViewModel(application) {
         _rotationBotle.value = rotation
     }
 
+    @RequiresApi(Build.VERSION_CODES.M)
     fun dialogShowChallenge(
         context: Context,
         audioBackground: MediaPlayer,
         isMute: Boolean,
         messageChallenge: String,
+        playViewModel: PlayViewModel
     ) {
-        showDialogChallenge(context, audioBackground, isMute, messageChallenge)
+        showDialogChallenge(context, audioBackground, isMute, messageChallenge, playViewModel)
     }
 
     fun statusShowDialog(status: Boolean) {
@@ -119,39 +132,119 @@ class PlayViewModel(application: Application) : AndroidViewModel(application) {
 
     fun addChallenge(challenge: Challenge) {
         viewModelScope.launch {
+            _isLoading.value = true
             try {
                 challengeRepository.addChallenge(challenge)
+                _isLoading.value = false
             } catch (e: Exception) {
-
+                _isLoading.value = false
             }
         }
     }
 
-    fun getListChallenge(){
+    fun getListChallenge() {
         viewModelScope.launch {
+            _isLoading.value = true
             try {
                 _listChallenge.value = challengeRepository.getListChallenge()
-            }catch (e : Exception){
-
+                _isLoading.value = false
+            } catch (e: Exception) {
+                _isLoading.value = false
             }
         }
     }
-    fun deleteChallenge(challenge: Challenge){
+
+    fun deleteChallenge(challenge: Challenge) {
         viewModelScope.launch {
+            _isLoading.value = true
             try {
                 challengeRepository.deleteChallenge(challenge)
-            }catch (e: Exception){
-
+                _isLoading.value = false
+            } catch (e: Exception) {
+                _isLoading.value = false
             }
         }
     }
-    fun updateChallenge (challenge: Challenge){
+
+    fun updateChallenge(challenge: Challenge) {
         viewModelScope.launch {
+            _isLoading.value = true
             try {
                 challengeRepository.updateChallenge(challenge)
-            }catch (e : Exception){
-
+                _isLoading.value = false
+            } catch (e: Exception) {
+                _isLoading.value = false
             }
         }
+    }
+
+    fun getChallenge(listChallenge: MutableList<Challenge>): String {
+        var description = ""
+
+        return if (listChallenge.isNotEmpty()) {
+            val size = listChallenge.size
+            val randomChallenge = Random.nextInt(0, size)
+            description = listChallenge[randomChallenge].DescriptionChallenge
+            description
+        } else {
+            val emptyChallenge = constants.EMPTYCHLLENGE
+            emptyChallenge
+        }
+    }
+
+    fun getUrlApp(activity: Activity): String {
+//        val namePackage = activity.packageName
+        val namePackage = "com.portafoliowebmariano.factschucknorris&hl=es&gl=US"
+        val urlApp = "https://play.google.com/store/apps/dev?id=5820982989716989300"
+        return urlApp
+    }
+
+    fun shareApp(audioBackground: MediaPlayer, activity: Activity) {
+        audioBackground.pause()
+        val intent = Intent(Intent.ACTION_SEND)
+        intent.setType("text/plain")
+        intent.putExtra(Intent.EXTRA_SUBJECT, "Pico Botella")
+//        val nombrePaquete = activity.packageName
+        val namePackage = "com.portafoliowebmariano.factschucknorris&hl=es&gl=US"
+        val eslogan = "App pico de botella \nSolo los valientes juegan!!"
+        val urlApp = "https://play.google.com/store/apps/details?id=${namePackage}"
+        var share = eslogan + urlApp
+        intent.putExtra(Intent.EXTRA_TEXT, share)
+        activity.startActivity(intent)
+    }
+    fun listPokemon(){
+        viewModelScope.launch {
+            _isLoading.value = true
+            try {
+                _listPokemon.value = challengeRepository.getListPokemon()
+                _isLoading.value = false
+            }catch (e:Exception){
+                _isLoading.value = false
+            }
+        }
+    }
+
+    fun obtenerPokemon(listPokemon: MutableList<Pokemon>): Pokemon? {
+        var pokemon : Pokemon? = null
+        return if (listPokemon.isNotEmpty()){
+            val size = listPokemon.size
+            val randomPokemon = Random.nextInt(0,size)
+            pokemon = listPokemon[randomPokemon]
+            pokemon
+        }else
+        {
+            pokemon
+        }
+    }
+
+    @RequiresApi(Build.VERSION_CODES.M)
+    fun isNetworkAvailable(context: Context): Boolean {
+        val connectivityManager = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+        val network = connectivityManager.activeNetwork ?: return false
+        val networkCapabilities = connectivityManager.getNetworkCapabilities(network) ?: return false
+
+        return networkCapabilities.hasTransport(NetworkCapabilities.TRANSPORT_WIFI) ||
+                networkCapabilities.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR) ||
+                networkCapabilities.hasTransport(NetworkCapabilities.TRANSPORT_ETHERNET)
     }
 }
